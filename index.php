@@ -210,7 +210,7 @@ if (isset($_SESSION['admin_id'])) {
         }
 
         // Generate new boxes every 1 second
-        setInterval(createBox, 1000);
+        setInterval(createBox, 2000);
     </script>
 </body>
 </html>
