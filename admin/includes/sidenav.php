@@ -92,8 +92,8 @@ $current_page = basename($_SERVER['PHP_SELF']);
                     </ul>
                 </li>
                 <!-- Reports -->
-                <li class="nav-item <?= in_array($current_page, ['age-report.php', 'health_stats.php' ,'gender-report.php', 'barangay-report.php','archive.php']) ? 'menu-open' : '' ?>">
-                    <a href="#" class="nav-link <?= in_array($current_page, ['age-report.php','health_stats.php', 'gender-report.php', 'barangay-report.php','archive.php']) ? 'active' : '' ?>">
+                <li class="nav-item <?= in_array($current_page, ['age-report.php', 'health_stats.php' ,'gender-report.php', 'barangay-report.php']) ? 'menu-open' : '' ?>">
+                    <a href="#" class="nav-link <?= in_array($current_page, ['age-report.php','health_stats.php', 'gender-report.php', 'barangay-report.php']) ? 'active' : '' ?>">
                         <i class="nav-icon fa-solid fa-chart-pie"></i>
                         <p>Reports</p>
                         <i class="right fas fa-angle-left"></i>

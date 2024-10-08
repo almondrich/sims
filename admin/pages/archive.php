@@ -1,5 +1,5 @@
-<?php include '../includes/header.php';?>
-<?php include '../includes/sidenav.php';?>
+<?php include '../includes/header.php'; ?>
+<?php include '../includes/sidenav.php'; ?>
 
 <div class="content-wrapper">
    <div class="content-header">
@@ -15,61 +15,82 @@
    <section class="content">
        <div class="container-fluid">
           <div class="card card-info elevation-2">
-             <div class="col-md-12">
-                <table id="archiveTable" class="table table-bordered">
-                   <thead>
-                      <tr>
-                         <th>ID No.</th>
-                         <th>Name</th>
-                         <th>Age</th>
-                         <th>Gender</th>
-                         <th>Address</th>
-                         <th>Remarks</th>
-                         <th>Action</th>
-                      </tr>
-                   </thead>
-                   <tbody>
-                   <?php
-                   // Include database connection
-                   include('../db_conn.php');
+             <div class="card-header">
+                <h3 class="card-title">Filter Archived Senior Citizens by Remarks</h3>
+             </div>
+             <div class="card-body">
+                <!-- Filter by Remarks -->
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <label for="remarksFilter">Filter by Remarks:</label>
+                        <select id="remarksFilter" class="form-control">
+                            <option value="">All</option>
+                            <option value="Deceased">Deceased</option>
+                            <option value="Transferred to other barangay">Transferred to other barangay</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="col-md-12">
+                   <table id="archiveTable" class="table table-bordered">
+                      <thead class="btn-cancel">
+                         <tr>
+                            <th>ID No.</th>
+                            <th>Name</th>
+                            <th>Age</th>
+                            <th>Gender</th>
+                            <th>Address</th>
+                            <th>Remarks</th>
+                            <th>Action</th>
+                         </tr>
+                      </thead>
+                      <tbody id="archiveTableBody">
+                      <?php
+                      // Include database connection
+                      include('../db_conn.php');
 
-                   // Query to fetch archived senior citizens
-                   $query = "
-                       SELECT sp.senior_id, sp.first_name, sp.middle_name, sp.last_name, sp.age, sp.gender, 
-                              sp.address, sp.archive_remarks, sp.other_remarks 
-                       FROM senior_profiles sp
-                       WHERE sp.status = 'Archive'
-                   ";
+                      // Query to fetch archived senior citizens
+                      $query = "
+                          SELECT sp.senior_id, sp.first_name, sp.middle_name, sp.last_name, sp.age, sp.gender, 
+                                 sp.address, sp.archive_remarks, sp.other_remarks 
+                          FROM senior_profiles sp
+                          WHERE sp.status = 'Archive'
+                      ";
 
-                   $result = mysqli_query($conn, $query);
+                      // Execute the query
+                      $result = mysqli_query($conn, $query);
 
-                   if ($result && mysqli_num_rows($result) > 0) {
-                       while ($row = mysqli_fetch_assoc($result)) {
-                           $remarks = $row['archive_remarks'] === 'Other' ? $row['other_remarks'] : $row['archive_remarks'];
-                           echo "<tr>";
-                           echo "<td>SNR-" . htmlspecialchars($row['senior_id']) . "</td>";
-                           echo "<td>" . htmlspecialchars($row['first_name']) . " " . htmlspecialchars($row['middle_name']) . " " . htmlspecialchars($row['last_name']) . "</td>";
-                           echo "<td>" . htmlspecialchars($row['age']) . "</td>";
-                           echo "<td>" . htmlspecialchars($row['gender']) . "</td>";
-                           echo "<td>" . htmlspecialchars($row['address']) . "</td>";
-                           echo "<td>" . htmlspecialchars($remarks) . "</td>";
-                           echo "<td>
-                                  <a class='btn btn-sm btn-success' href='#' data-toggle='modal' data-target='#restoreModal' 
-                                  data-id='" . htmlspecialchars($row['senior_id']) . "'><i class='fa fa-undo'></i> Restore</a>
-                                  </td>";
-                           echo "</tr>";
-                       }
-                   } else {
-                       echo "<tr><td colspan='7'>No archived records found.</td></tr>";
-                   }
+                      // Check if the query returns any result
+                      if ($result && mysqli_num_rows($result) > 0) {
+                          while ($row = mysqli_fetch_assoc($result)) {
+                              $remarks = $row['archive_remarks'] === 'Other' ? $row['other_remarks'] : $row['archive_remarks'];
+                              echo "<tr>";
+                              echo "<td>SNR-" . htmlspecialchars($row['senior_id']) . "</td>";
+                              echo "<td>" . htmlspecialchars($row['first_name']) . " " . htmlspecialchars($row['middle_name']) . " " . htmlspecialchars($row['last_name']) . "</td>";
+                              echo "<td>" . htmlspecialchars($row['age']) . "</td>";
+                              echo "<td>" . htmlspecialchars($row['gender']) . "</td>";
+                              echo "<td>" . htmlspecialchars($row['address']) . "</td>";
+                              echo "<td>" . htmlspecialchars($remarks) . "</td>";
+                              echo "<td>
+                                     <a class='btn btn-sm btn-success' href='#' data-toggle='modal' data-target='#restoreModal' 
+                                     data-id='" . htmlspecialchars($row['senior_id']) . "'><i class='fa fa-undo'></i> Restore</a>
+                                    </td>";
+                              echo "</tr>";
+                          }
+                      } else {
+                          echo "<tr><td colspan='7'>No archived records found.</td></tr>";
+                      }
 
-                   mysqli_close($conn);
-                   ?>
-                  </tbody>
-               </table>
-            </div>
-         </div>
-      </div>
+                      // Close the connection
+                      mysqli_close($conn);
+                      ?>
+                     </tbody>
+                  </table>
+               </div>
+             </div>
+          </div>
+       </div>
    </section>
 </div>
 
@@ -107,6 +128,23 @@
             var seniorId = button.data('id'); // Extract senior_id from the data-* attributes
             var modal = $(this);
             modal.find('#restore_senior_id').val(seniorId);
+        });
+
+        // Remarks Filter
+        $('#remarksFilter').on('change', function() {
+            var selectedRemarks = $(this).val();
+            
+            $.ajax({
+                url: 'fetch_archived.php',
+                type: 'POST',
+                data: {remarks: selectedRemarks},
+                success: function(data) {
+                    $('#archiveTableBody').html(data);
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error fetching data:', error);
+                }
+            });
         });
     });
 </script>

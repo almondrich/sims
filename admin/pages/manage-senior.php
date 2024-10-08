@@ -18,16 +18,12 @@
    <section class="content">
        <div class="container-fluid">
           <div class="card card-info elevation-2">
-             <br>
-             <!-- Gender Filter -->
-             <div class="filter-container">
-                <label for="genderFilter">Filter by Gender:</label>
-                <select id="genderFilter" class="form-control" style="width: 200px; display: inline-block;">
-                    <option value="">All</option>
-                    <option value="Male">Male</option>
-                    <option value="Female">Female</option>
-                </select>
+             <div class="card-header">
+                <h3 class="card-title">Manage List</h3>
              </div>
+             <div class="card-body">
+                <!-- Filter by Remarks -->
+       
              <div class="col-md-12">
                 <table id="example1" class="table table-bordered">
                    <thead class="btn-cancel">
@@ -138,10 +134,10 @@ mysqli_close($conn);
                             <label><strong>Address:</strong></label>
                             <p id="view_address" class="form-control border"></p>
                         </div>
-                        <div class="col-md-6 form-group">
+                        <!-- <div class="col-md-6 form-group">
                             <label><strong>Contact Number:</strong></label>
                             <p id="view_contact_number" class="form-control border"></p>
-                        </div>
+                        </div> -->
                         <div class="col-md-6 form-group">
                             <label><strong>Status:</strong></label>
                             <p id="view_status" class="form-control border"></p>
@@ -213,10 +209,10 @@ mysqli_close($conn);
                                 <label for="edit_address">Address:</label>
                                 <textarea class="form-control form-field" id="edit_address" name="address" required></textarea>
                             </div>
-                            <div class="col-md-6 form-group">
+                            <!-- <div class="col-md-6 form-group">
                                 <label for="edit_contact_number">Contact Number:</label>
                                 <input type="text" class="form-control form-field" id="edit_contact_number" name="contact_number">
-                            </div>
+                            </div> -->
                         </div>
                     </div>
                     
@@ -246,6 +242,7 @@ mysqli_close($conn);
                     <div class="form-group">
                         <label for="archive_remarks">Remarks</label>
                         <select class="form-control" id="archive_remarks" name="archive_remarks">
+                        <option value="">---Select---</option>
                             <option value="Deceased">Deceased</option>
                             <option value="Transferred to other barangay">Transferred to other barangay</option>
                             <option value="Other">Other</option>

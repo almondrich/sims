@@ -248,6 +248,13 @@
                                 </li>
                             </ul>
                         </li>
+                             <!-- Archive Menu Item -->
+                             <li class="nav-item">
+                    <a href="pages/archive.php" class="nav-link ">
+                        <i class="nav-icon fas fa-archive"></i>
+                        <p>Archive</p>
+                    </a>
+                </li>
                         <!-- Add other navigation items here -->
                     </ul>
                 </nav>
