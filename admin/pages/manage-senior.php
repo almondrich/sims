@@ -22,7 +22,22 @@
                 <h3 class="card-title">Manage List</h3>
              </div>
              <div class="card-body">
-                <!-- Filter by Remarks -->
+                <!-- Search and Filter Section -->
+                <div class="row mb-3">
+                   <!-- Search by Name -->
+                   <div class="col-md-4">
+                      <input type="text" id="searchName" class="form-control" placeholder="Search by Name">
+                   </div>
+                   <!-- Filter by Gender -->
+                   <div class="col-md-3">
+                      <select id="filterGender" class="form-control">
+                         <option value="">All Genders</option>
+                         <option value="Male">Male</option>
+                         <option value="Female">Female</option>
+                      </select>
+                   </div>
+                </div>
+
        
              <div class="col-md-12">
                 <table id="example1" class="table table-bordered">
@@ -100,57 +115,7 @@ mysqli_close($conn);
    </section>
 </div>
 
-<!-- View Modal -->
-<div class="modal fade" id="viewModal" tabindex="-1" role="dialog" aria-labelledby="viewModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="viewModalLabel">Senior Citizen Information</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <!-- Create a form-like structure using table or bordered divs -->
-                <div class="container">
-                    <div class="row">
-                        <div class="col-md-6 form-group">
-                            <label><strong>Full Name:</strong></label>
-                            <p id="view_full_name" class="form-control border"></p>
-                        </div>
-                        <div class="col-md-6 form-group">
-                            <label><strong>Gender:</strong></label>
-                            <p id="view_gender" class="form-control border"></p>
-                        </div>
-                        <div class="col-md-6 form-group">
-                            <label><strong>Birthday:</strong></label>
-                            <p id="view_birthday" class="form-control border"></p>
-                        </div>
-                        <div class="col-md-6 form-group">
-                            <label><strong>Age:</strong></label>
-                            <p id="view_age" class="form-control border"></p>
-                        </div>
-                        <div class="col-md-12 form-group">
-                            <label><strong>Address:</strong></label>
-                            <p id="view_address" class="form-control border"></p>
-                        </div>
-                        <!-- <div class="col-md-6 form-group">
-                            <label><strong>Contact Number:</strong></label>
-                            <p id="view_contact_number" class="form-control border"></p>
-                        </div> -->
-                        <div class="col-md-6 form-group">
-                            <label><strong>Status:</strong></label>
-                            <p id="view_status" class="form-control border"></p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
+
 
 <!-- Edit Modal -->
 <!-- Edit Modal -->
@@ -417,5 +382,45 @@ mysqli_close($conn);
         }
     });
     </script>
+    <script>
+   $(document).ready(function() {
+       // Search and filter functionality
+       $('#searchName').on('input', function() {
+           var searchValue = $(this).val().toLowerCase();
+           filterTable(searchValue, $('#filterGender').val());
+       });
+
+       $('#filterGender').on('change', function() {
+           var genderValue = $(this).val();
+           filterTable($('#searchName').val().toLowerCase(), genderValue);
+       });
+
+       function filterTable(search, gender) {
+           $('#seniorTableBody tr').filter(function() {
+               $(this).toggle(
+                   $(this).text().toLowerCase().indexOf(search) > -1 &&
+                   ($(this).find('td:nth-child(4)').text().indexOf(gender) > -1 || gender === "")
+               );
+           });
+       }
+
+       // Handle the archive modal
+       $('#archiveModal').on('show.bs.modal', function(event) {
+           var button = $(event.relatedTarget);
+           var seniorId = button.data('id');
+           var modal = $(this);
+           modal.find('#archive_senior_id').val(seniorId);
+       });
+
+       // Show or hide the "Other" remarks input field based on selection
+       $('#archive_remarks').on('change', function() {
+           if ($(this).val() === 'Other') {
+               $('#otherRemarksInput').show();
+           } else {
+               $('#otherRemarksInput').hide();
+           }
+       });
+   });
+</script>
 </body>
 </html>
