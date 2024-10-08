@@ -75,8 +75,8 @@ $current_page = basename($_SERVER['PHP_SELF']);
                     </ul>
                 </li>
                 <!-- Users -->
-                <li class="nav-item <?= in_array($current_page, ['barangay.html', 'admin.html']) ? 'menu-open' : '' ?>">
-                    <a href="#" class="nav-link <?= in_array($current_page, ['barangay.html', 'admin.html']) ? 'active' : '' ?>">
+                <li class="nav-item <?= in_array($current_page, ['barangay.html', 'admin.html','admin_users.php']) ? 'menu-open' : '' ?>">
+                    <a href="#" class="nav-link <?= in_array($current_page, ['barangay.html', 'admin.html','admin_users.php']) ? 'active' : '' ?>">
                         <i class="nav-icon fa-solid fa-user-tie"></i>
                         <p>Users</p>
                         <i class="right fas fa-angle-left"></i>
@@ -92,8 +92,8 @@ $current_page = basename($_SERVER['PHP_SELF']);
                     </ul>
                 </li>
                 <!-- Reports -->
-                <li class="nav-item <?= in_array($current_page, ['age-report.php', 'health_stats.php' ,'gender-report.php', 'barangay-report.php']) ? 'menu-open' : '' ?>">
-                    <a href="#" class="nav-link <?= in_array($current_page, ['age-report.php','health_stats.php', 'gender-report.php', 'barangay-report.php']) ? 'active' : '' ?>">
+                <li class="nav-item <?= in_array($current_page, ['age-report.php', 'health_stats.php' ,'gender-report.php', 'barangay-report.php','archive.php']) ? 'menu-open' : '' ?>">
+                    <a href="#" class="nav-link <?= in_array($current_page, ['age-report.php','health_stats.php', 'gender-report.php', 'barangay-report.php','archive.php']) ? 'active' : '' ?>">
                         <i class="nav-icon fa-solid fa-chart-pie"></i>
                         <p>Reports</p>
                         <i class="right fas fa-angle-left"></i>
@@ -126,7 +126,13 @@ $current_page = basename($_SERVER['PHP_SELF']);
                         </li>
                     </ul>
                 </li>
-                <!-- Add other navigation items here -->
+                               <!-- Archive Menu Item -->
+                               <li class="nav-item">
+                    <a href="archive.php" class="nav-link <?= ($current_page == 'archive.php') ? 'active' : '' ?>">
+                        <i class="nav-icon fas fa-archive"></i>
+                        <p>Archive</p>
+                    </a>
+                </li>
             </ul>
         </nav>
     </div>

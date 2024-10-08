@@ -36,7 +36,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Prepare the SQL statement with placeholders
     $sql = "INSERT INTO senior_profiles 
-        (senior_id, barangay_assigned, zone, municipality, province, first_name, middle_name, last_name, gender, birthday, age, birth_place, religion, civil_status, spouse_name, spouse_contact_number, educational_attainment, sickly_conditions, disabilities, receives_pension, pension_sources) 
+        (senior_id, barangay_assigned, zone, municipality, province, first_name, middle_name, last_name, gender, birthday, age, birth_place, religion, civil_status, spouse_name, spouse_contact_number, educational_attainment, sickly_conditions, disability, receives_pension, pension_sources) 
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     // Prepare the statement
@@ -67,7 +67,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $spouse_contact_number,
         $educational_attainment,
         $sickly_conditions,
-        $disabilities,
+        $disability,
         $receives_pension,
         $pension_sources
     );

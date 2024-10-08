@@ -16,7 +16,7 @@ $sickly_conditions = [
     'Others' => 0,
 ];
 
-$disability_conditions = [
+$disability = [
     'Blind' => 0,
     'Cripple (Unable to walk)' => 0,
     'Cross Eyed' => 0,
@@ -45,8 +45,8 @@ if ($resultHealth && $resultHealth->num_rows > 0) {
         $disabilities = explode(",", $row['disability']);
         foreach ($disabilities as $condition) {
             $condition = trim($condition);
-            if (isset($disability_conditions[$condition])) {
-                $disability_conditions[$condition]++;
+            if (isset($disability[$condition])) {
+                $disability[$condition]++;
             }
         }
     }
@@ -132,7 +132,7 @@ $conn->close();
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php foreach ($disability_conditions as $disability => $count): ?>
+                                    <?php foreach ($disability as $disability => $count): ?>
                                         <tr>
                                             <td><?= htmlspecialchars($disability); ?></td>
                                             <td><?= htmlspecialchars($count); ?></td>

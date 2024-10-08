@@ -1,134 +1,6 @@
 <?php include '../includes/header.php';?>
 <?php include '../includes/sidenav.php';?>
 
-<style>
-   /* Ensure the icons in the sidebar are white */
-   .main-sidebar .nav-link .nav-icon {
-       color: white !important;
-   }
-
-   .main-sidebar .nav-link.active .nav-icon,
-   .main-sidebar .nav-link:hover .nav-icon {
-       color: white !important;
-   }
-
-   /* Style the info-boxes */
-   .info-box {
-       border-radius: 8px;
-       background: #fff;
-       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-       margin-bottom: 20px;
-       display: flex;
-       align-items: center;
-       padding: 15px;
-   }
-
-   .info-box-icon {
-       border-radius: 50%;
-       color: #fff;
-       display: flex;
-       align-items: center;
-       justify-content: center;
-       font-size: 24px;
-       height: 60px;
-       width: 60px;
-   }
-
-   .info-box-content {
-       margin-left: 15px;
-       flex: 1;
-   }
-
-   .info-box-text {
-       margin: 0;
-       font-size: 16px;
-       color: #333;
-   }
-
-   .info-box-number {
-       margin: 0;
-       font-size: 24px;
-       font-weight: bold;
-       color: #333;
-   }
-
-   @media (max-width: 767.98px) {
-       .info-box {
-           flex-direction: column;
-           align-items: flex-start;
-       }
-
-       .info-box-icon {
-           margin-bottom: 10px;
-       }
-
-       .info-box-content {
-           margin-left: 0;
-       }
-   }
-
-   .bg-warning { background-color: #ffc107; }
-   .bg-success { background-color: #28a745; }
-   .bg-info { background-color: #17a2b8; }
-   .bg-danger { background-color: #dc3545; }
-   .bg-primary { background-color: #007bff; }
-   .bg-indigo { background-color: #6610f2; }
-
-   /* Centering alert messages */
-   .alert {
-       padding: 15px;
-       margin: 0 auto;
-       width: 50%;
-       border: 1px solid transparent;
-       border-radius: 4px;
-       position: fixed;
-       top: 80px;
-       left: 50%;
-       transform: translateX(-50%);
-       z-index: 1000;
-       display: none;
-       border-radius: 50px;
-   }
-
-   .alert-success {
-       color: #3c763d;
-       background-color: #dff0d8;
-       border-color: #d6e9c6;
-       font-weight: bold;
-   }
-
-   .alert-error {
-       color: #a94442;
-       background-color: #f2dede;
-       border-color: #ebccd1;
-   }
-</style>
-
-<!-- Alert Messages -->
-<div class="container text-center">
-    <?php if (isset($_GET['status']) && $_GET['status'] == 'success'): ?>
-        <div class="alert alert-success" id="success-alert">
-            <?php if (isset($_GET['action']) && $_GET['action'] == 'update'): ?>
-                Senior citizen updated successfully!
-            <?php elseif (isset($_GET['action']) && $_GET['action'] == 'delete'): ?>
-                Senior citizen deleted successfully!
-            <?php else: ?>
-                Senior citizen added successfully!
-            <?php endif; ?>
-        </div>
-    <?php elseif (isset($_GET['status']) && $_GET['status'] == 'error'): ?>
-        <div class="alert alert-error" id="error-alert">
-            <?php if (isset($_GET['action']) && $_GET['action'] == 'update'): ?>
-                Error updating senior citizen: <?php echo htmlspecialchars($_GET['message']); ?>
-            <?php elseif (isset($_GET['action']) && $_GET['action'] == 'delete'): ?>
-                Error deleting senior citizen: <?php echo htmlspecialchars($_GET['message']); ?>
-            <?php else: ?>
-                Error adding senior citizen: <?php echo htmlspecialchars($_GET['message']); ?>
-            <?php endif; ?>
-        </div>
-    <?php endif; ?>
-</div>
-
 <div class="content-wrapper">
    <div class="content-header">
       <div class="container-fluid">
@@ -171,53 +43,59 @@
                    </thead>
                    <tbody id="seniorTableBody">
                    <?php
-                   // Include database connection
-                   include('../db_conn.php');
+// Include database connection
+include('../db_conn.php');
 
-                   // Query to fetch senior citizens data along with barangay_assigned
-                   $query = "
-                       SELECT sp.senior_id, sp.first_name, sp.middle_name, sp.last_name, sp.age, sp.birthday, sp.gender, 
-                              sp.address, sp.status, bc.barangay_assigned 
-                       FROM senior_profiles sp
-                       JOIN barangay_captains bc ON sp.barangay_assigned = bc.barangay_assigned
-                   ";
+// Query to fetch senior citizens data along with barangay_assigned
+$query = "
+    SELECT sp.senior_id, sp.first_name, sp.middle_name, sp.last_name, sp.age, sp.birthday, sp.gender, 
+           sp.address, sp.status, bc.barangay_assigned 
+    FROM senior_profiles sp
+    JOIN barangay_captains bc ON sp.barangay_assigned = bc.barangay_assigned
+    WHERE sp.status != 'Archive'
+";
 
-                   // Execute the query
-                   $result = mysqli_query($conn, $query);
 
-                   // Check if the query returns any result
-                   if ($result && mysqli_num_rows($result) > 0) {
-                       // Loop through each row and display data
-                       while ($row = mysqli_fetch_assoc($result)) {
-                           echo "<tr>";
-                           echo "<td>SNR-" . htmlspecialchars($row['senior_id']) . "</td>";
-                           echo "<td><p class='info'><small class='text-danger'></small> " . htmlspecialchars($row['first_name']) . " " . htmlspecialchars($row['middle_name']) . " " . htmlspecialchars($row['last_name']) . "</p></td>";
-                           echo "<td>" . htmlspecialchars($row['age']) . "</td>";
-                           echo "<td>" . htmlspecialchars($row['gender']) . "</td>"; // Display gender value
-                           echo "<td>" . htmlspecialchars($row['barangay_assigned']) . "</td>";
-                           echo "<td class='text-center'><span class='badge bg-success'>" . htmlspecialchars($row['status']) . "</span></td>";
-                           echo "<td class='text-center'>
-                         
 
-                                  <a class='btn btn-sm btn-success' href='#' data-toggle='modal' data-target='#editModal' 
-                                  data-id='" . htmlspecialchars($row['senior_id']) . "' data-firstname='" . htmlspecialchars($row['first_name']) . "' 
-                                  data-middlename='" . htmlspecialchars($row['middle_name']) . "' data-lastname='" . htmlspecialchars($row['last_name']) . "' 
-                                  data-gender='" . htmlspecialchars($row['gender']) . "' data-birthday='" . htmlspecialchars($row['birthday']) . "' 
-                                  data-age='" . htmlspecialchars($row['age']) . "' data-barangay='" . htmlspecialchars($row['barangay_assigned']) . "' 
-                                  data-status='" . htmlspecialchars($row['status']) . "'><i class='fa fa-user-edit'></i> Update</a>
+// Execute the query
+$result = mysqli_query($conn, $query);
 
-                                  <a class='btn btn-sm btn-danger' href='#' data-toggle='modal' data-target='#deleteModal' 
-                                  data-id='" . htmlspecialchars($row['senior_id']) . "'><i class='fa fa-trash-alt'></i> Delete</a>
-                                  </td>";
-                           echo "</tr>";
-                       }
-                   } else {
-                       echo "<tr><td colspan='7'>No records found.</td></tr>";
-                   }
+// Check if the query returns any result
+if ($result && mysqli_num_rows($result) > 0) {
+    // Loop through each row and display data
+    while ($row = mysqli_fetch_assoc($result)) {
+        echo "<tr>";
+        echo "<td>SNR-" . htmlspecialchars($row['senior_id']) . "</td>";
+        echo "<td><p class='info'><small class='text-danger'></small> " . htmlspecialchars($row['first_name']) . " " . htmlspecialchars($row['middle_name']) . " " . htmlspecialchars($row['last_name']) . "</p></td>";
+        echo "<td>" . htmlspecialchars($row['age']) . "</td>";
+        echo "<td>" . htmlspecialchars($row['gender']) . "</td>"; // Display gender value
+        echo "<td>" . htmlspecialchars($row['barangay_assigned']) . "</td>";
+        echo "<td class='text-center'><span class='badge bg-success'>" . htmlspecialchars($row['status']) . "</span></td>";
+        echo "<td class='text-center'>
+              <a class='btn btn-sm btn-success' href='#' data-toggle='modal' data-target='#editModal' 
+              data-id='" . htmlspecialchars($row['senior_id']) . "' data-firstname='" . htmlspecialchars($row['first_name']) . "' 
+              data-middlename='" . htmlspecialchars($row['middle_name']) . "' data-lastname='" . htmlspecialchars($row['last_name']) . "' 
+              data-gender='" . htmlspecialchars($row['gender']) . "' data-birthday='" . htmlspecialchars($row['birthday']) . "' 
+              data-age='" . htmlspecialchars($row['age']) . "' data-barangay='" . htmlspecialchars($row['barangay_assigned']) . "' 
+              data-status='" . htmlspecialchars($row['status']) . "'><i class='fa fa-user-edit'></i> Update</a>
 
-                   // Close the connection
-                   mysqli_close($conn);
-                   ?>
+              <a class='btn btn-sm btn-danger' href='#' data-toggle='modal' data-target='#deleteModal' 
+              data-id='" . htmlspecialchars($row['senior_id']) . "'><i class='fa fa-trash-alt'></i> Delete</a>
+
+              <a class='btn btn-sm btn-warning' href='#' data-toggle='modal' data-target='#archiveModal' 
+      data-id='" . htmlspecialchars($row['senior_id']) . "'><i class='fa fa-archive'></i> Archive</a>
+
+              </td>";
+        echo "</tr>";
+    }
+} else {
+    echo "<tr><td colspan='7'>No records found.</td></tr>";
+}
+
+// Close the connection
+mysqli_close($conn);
+?>
+
                   </tbody>
                </table>
             </div>
@@ -351,6 +229,72 @@
         </div>
     </div>
 </div>
+<!-- Archive Modal -->
+<!-- Archive Modal -->
+<div class="modal fade" id="archiveModal" tabindex="-1" role="dialog" aria-labelledby="archiveModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="archiveModalLabel">Archive Senior Citizen</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="archive_senior.php" method="POST">
+                <div class="modal-body">
+                    <input type="hidden" id="archive_senior_id" name="senior_id">
+                    <div class="form-group">
+                        <label for="archive_remarks">Remarks</label>
+                        <select class="form-control" id="archive_remarks" name="archive_remarks">
+                            <option value="Deceased">Deceased</option>
+                            <option value="Transferred to other barangay">Transferred to other barangay</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div id="otherRemarksInput" style="display: none;">
+                        <div class="form-group">
+                            <label for="other_remarks">Other Remarks</label>
+                            <input type="text" class="form-control" id="other_remarks" name="other_remarks">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-warning">Archive</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- jQuery and Bootstrap scripts (place just before closing </body> tag) -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+
+<!-- Your custom scripts -->
+<script>
+   // Set the senior_id in the Archive Modal when opening
+   $('#archiveModal').on('show.bs.modal', function(event) {
+       var button = $(event.relatedTarget); // Button that triggered the modal
+       var seniorId = button.data('id'); // Extract info from data-* attributes
+       var modal = $(this);
+       modal.find('#archive_senior_id').val(seniorId); // Update the modal's hidden input
+   });
+
+   // Show or hide the "Other" remarks input field based on selection
+   $('#archive_remarks').on('change', function() {
+       if ($(this).val() === 'Other') {
+           $('#otherRemarksInput').show();
+       } else {
+           $('#otherRemarksInput').hide();
+       }
+   });
+</script>
+
+</body>
+</html>
+
+
 
 <style>
     .form-section {
